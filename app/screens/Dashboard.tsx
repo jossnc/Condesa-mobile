@@ -1,24 +1,36 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView} from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, Dimensions } from "react-native";
 import { NavigationProp } from '@react-navigation/native';
-import CategoriesSection from "@/components/Services";
-
+import PagerView from 'react-native-pager-view';
+import CategoriesSection from "../../components/Services";
 
 interface DashboardProps {
     navigation: NavigationProp<any>;
 }
 
+const items = [
+    { id: 1, src: require('../../assets/images/matriz.jpg') },
+    { id: 2, src: require('../../assets/images/durango.jpg') },
+    { id: 3, src: require('../../assets/images/juarez.jpg') },
+];
+
+const { width: viewportWidth } = Dimensions.get('window');
 
 const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
-   
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
                 <View style={styles.largeCard}>
-                    <Text style={styles.title}>Bienvenido</Text>
+                    <PagerView style={styles.pagerView} initialPage={0}>
+                        {items.map((item) => (
+                            <View key={item.id} style={styles.carouselItem}>
+                                <Image source={item.src} style={styles.carouselImage} />
+                            </View>
+                        ))}
+                    </PagerView>
                 </View>
                 <CategoriesSection />
-                <View style={styles.cardsContainer}>
+                {/* <View style={styles.cardsContainer}>
                     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pantalla1')}>
                         <Text style={styles.cardText}>Pantalla 1</Text>
                     </TouchableOpacity>
@@ -28,7 +40,7 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pantalla3')}>
                         <Text style={styles.cardText}>Pantalla 3</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
             </View>
         </ScrollView>
     );
@@ -37,55 +49,61 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
 export default Dashboard;
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-       //backgroundColor: '#fff',
-    },
-    searchInput: {
-        flex: 1,
-        height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 20,
-        paddingHorizontal: 10,
-        paddingLeft: 30,
-    },
-    searchIcon: {
-        position: 'absolute',
-        left: 10,
-    },
-    searchContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-        width: '85%',
-        left: 30,
-        top:10,
-    },
-    searchButton: {
-        marginLeft: 10,
-        backgroundColor: '#0a7ea4',
-        padding: 10,
-        borderRadius: 20,
+    scrollContainer: {
+        flexGrow: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        padding: 10,
+        paddingTop: 20,
+        //backgroundColor: '#fff',
+    },
+    largeCard: {
+        width: '90%',
+        aspectRatio: 1,
+        borderRadius: 20,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)', 
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom: 20,
+        shadowColor: 'rgba(255, 255, 255, 0.5)',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 5,
+    },
+    pagerView: {
+        width: '100%',
+        height: '100%',
+    },
+    carouselItem: {
+        width: '100%',
+        height: '100%',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    carouselImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 20,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: '#fff',
+        color: '#11181C',
     },
     cardsContainer: {
-        flex: 3,
-        justifyContent: 'center',
+        width: '100%',
         alignItems: 'center',
-        //backgroundColor: '#f8f9fa',
     },
     card: {
         width: '80%',
-        padding: 10,
+        padding: 20,
         marginVertical: 10,
-        backgroundColor: '#afafaf',
+        backgroundColor: '#fff',
         borderRadius: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -94,28 +112,8 @@ const styles = StyleSheet.create({
         elevation: 5,
         alignItems: 'center',
     },
-    largeCard: {
-        width: '80%',
-        aspectRatio: 2,
-        left: 40,
-        top:20,
-        borderRadius: 20,
-        backgroundColor: '#afafaf',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 5,
-    },
     cardText: {
         fontSize: 18,
         fontWeight: 'bold',
     },
-    scrollContainer: {
-        flexGrow: 1,
-    },
-
 });

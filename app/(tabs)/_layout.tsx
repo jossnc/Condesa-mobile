@@ -2,7 +2,7 @@ import React from "react";
 import { Tabs } from "expo-router";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from '@expo/vector-icons';
-import { TabBar } from "../../components/TabBar";
+import TabBar from "../../components/TabBar";
 
 interface CustomHeaderProps {
     title: string;

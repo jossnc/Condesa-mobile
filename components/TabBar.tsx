@@ -1,74 +1,86 @@
-import React from "react";
-import { View, StyleSheet } from "react-native";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { useTheme } from "@react-navigation/native";
-import TabBarButton from "./TabBarButton";
-import { icons } from "../constants/icons"; // Importamos los íconos centralizados
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
+import { icons } from '../constants/icons';
+import { Colors } from '../constants/Colors'; 
 
-type IconKeys = keyof typeof icons; // Tipo que asegura que solo se usen claves válidas de icons
-
-export function TabBar({ state, descriptors, navigation }: BottomTabBarProps) {
-    const { colors } = useTheme();
-
+const TabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     return (
-        <View style={styles.tabbar}>
-            {state.routes.map((route, index) => {
-                const { options } = descriptors[route.key];
-                const label =
-                    options.tabBarLabel !== undefined
-                        ? options.tabBarLabel
-                        : options.title !== undefined
-                            ? options.title
-                            : route.name;
+        <View style={styles.tabbarContainer}>
+            <View style={styles.tabbar}>
+                {state.routes.map((route, index) => {
+                    const { options } = descriptors[route.key];
+                    const isFocused = state.index === index;
 
-                const isFocused = state.index === index;
+                    const onPress = () => {
+                        const event = navigation.emit({
+                            type: 'tabPress',
+                            target: route.key,
+                            canPreventDefault: true,
+                        });
 
-                const onPress = () => {
-                    const event = navigation.emit({
-                        type: "tabPress",
-                        target: route.key,
-                        canPreventDefault: true,
-                    });
+                        if (!isFocused && !event.defaultPrevented) {
+                            navigation.navigate(route.name);
+                        }
+                    };
 
-                    if (!isFocused && !event.defaultPrevented) {
-                        navigation.navigate(route.name);
-                    }
-                };
+                    const onLongPress = () => {
+                        navigation.emit({
+                            type: 'tabLongPress',
+                            target: route.key,
+                        });
+                    };
 
-                const onLongPress = () => {
-                    navigation.emit({
-                        type: "tabLongPress",
-                        target: route.key,
-                    });
-                };
+                    const IconComponent = icons[route.name as keyof typeof icons];
 
-                // Garantizar que route.name sea una clave válida para icons
-                //const renderIcon = icons[route.name as IconKeys] || (() => null);
-
-                return (
-                    <TabBarButton
-                        key={route.name}
-                        onPress={onPress}
-                        onLongPress={onLongPress}
-                        isFocused={isFocused}
-                        renderIcon={icons[route.name as IconKeys]}
-                        label={label}
-                        color={isFocused ? colors.primary : colors.text} 
-                                          />
-
-                );
-            })}
+                    return (
+                        <TouchableOpacity
+                            key={route.key}
+                            accessibilityRole="button"
+                            accessibilityState={isFocused ? { selected: true } : {}}
+                            accessibilityLabel={options.tabBarAccessibilityLabel}
+                            onPress={onPress}
+                            onLongPress={onLongPress}
+                            style={styles.tabButton}
+                        >
+                            {IconComponent && <IconComponent isFocused={isFocused} />}
+                        </TouchableOpacity>
+                    );
+                })}
+            </View>
         </View>
     );
-}
+};
+
+export default TabBar;
 
 const styles = StyleSheet.create({
+    tabbarContainer: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        right: 20,
+        height: 70,
+        borderRadius: 35,
+        backgroundColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 5,
+        elevation: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     tabbar: {
         flexDirection: 'row',
-        height: 60,
-        borderTopWidth: 1,
-        borderTopColor: '#ccc',
+        height: '100%',
         justifyContent: 'space-around',
+        alignItems: 'center',
+        width: '100%',
+    },
+    tabButton: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
     },
 });
