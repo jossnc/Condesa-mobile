@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { icons } from '../constants/icons';
-import { Colors } from '../constants/Colors'; 
+import { Colors } from '../constants/Colors';
 
 const TabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
     return (
@@ -43,7 +43,10 @@ const TabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigation })
                             onLongPress={onLongPress}
                             style={styles.tabButton}
                         >
-                            {IconComponent && <IconComponent isFocused={isFocused} />}
+                            {IconComponent && <IconComponent color={isFocused ? Colors.light.tint : Colors.light.tint} />}
+                            <Text style={{ color: isFocused ? Colors.light.tint : Colors.light.text, fontSize: 12 }}>
+                                {route.name === 'Home' ? 'Inicio' : route.name}
+                            </Text>
                         </TouchableOpacity>
                     );
                 })}

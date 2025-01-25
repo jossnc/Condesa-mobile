@@ -20,6 +20,8 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
             <View style={styles.container}>
+               
+                <CategoriesSection />
                 <View style={styles.largeCard}>
                     <PagerView style={styles.pagerView} initialPage={0}>
                         {items.map((item) => (
@@ -29,7 +31,6 @@ const Dashboard: React.FC<DashboardProps> = ({ navigation }) => {
                         ))}
                     </PagerView>
                 </View>
-                <CategoriesSection />
                 {/* <View style={styles.cardsContainer}>
                     <TouchableOpacity style={styles.card} onPress={() => navigation.navigate('Pantalla1')}>
                         <Text style={styles.cardText}>Pantalla 1</Text>
